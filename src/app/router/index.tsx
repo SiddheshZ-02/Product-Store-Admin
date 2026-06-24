@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import AuthLayout from "@/app/layouts/AuthLayout";
 import DashboardLayout from "@/app/layouts/DashboardLayout";
@@ -26,11 +26,20 @@ import PaySupplierPage from "@/pages/payments/PaySupplierPage";
 import InventoryReportPage from "@/pages/reports/InventoryReportPage";
 import SalesReportPage from "@/pages/reports/SalesReportPage";
 import CustomerLedgerPage from "@/pages/reports/CustomerLedgerPage";
+import { ROUTES } from "@/constants/routes";
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Navigate to={ROUTES.DASHBOARD} replace />
+            </ProtectedRoute>
+          }
+        />
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
         </Route>
