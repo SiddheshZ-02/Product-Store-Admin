@@ -27,6 +27,18 @@ import InventoryReportPage from "@/pages/reports/InventoryReportPage";
 import SalesReportPage from "@/pages/reports/SalesReportPage";
 import CustomerLedgerPage from "@/pages/reports/CustomerLedgerPage";
 import { ROUTES } from "@/constants/routes";
+import SupplierLedgerPage from "@/pages/reports/SupplierLedgerPage";
+import ProfitLossPage from "@/pages/reports/ProfitLossPage";
+import DashboardAnalyticsPage from "@/pages/dashboard/DashboardAnalyticsPage";
+import PurchaseReportPage from "@/pages/reports/PurchaseReportPage";
+import DueReminderPage from "@/pages/customers/DueReminderPage";
+import SalesHistoryPage from "@/pages/sales/SalesHistoryPage";
+import SaleInvoicePage from "@/pages/sales/SaleInvoicePage";
+import SalesReturnPage from "@/pages/sales/SalesReturnPage";
+import ExpenseCategoriesPage from "@/pages/expenses/ExpenseCategoriesPage";
+import CreateExpensePage from "@/pages/expenses/CreateExpensePage";
+import ExpenseListPage from "@/pages/expenses/ExpenseListPage";
+import EditExpensePage from "@/pages/expenses/EditExpensePage";
 
 export default function AppRouter() {
   return (
@@ -65,60 +77,53 @@ export default function AppRouter() {
           <Route path="/suppliers/create" element={<SupplierCreatePage />} />
 
           <Route path="/suppliers/:id/edit" element={<SupplierEditPage />} />
+          <Route path="/purchases/create" element={<PurchaseCreatePage />} />
+          <Route path="/sales/create" element={<SalesCreatePage />} />
+          <Route path="/sales" element={<SalesListPage />} />
+          <Route path="/sales/:id" element={<SaleInvoicePage />} />
+          <Route path="/payments/customer" element={<CustomerDueListPage />} />
+          <Route path="/expenses/create" element={<CreateExpensePage />} />
+
           <Route
-  path="/purchases/create"
-  element={<PurchaseCreatePage />}
-/>
-<Route
-  path="/sales/create"
-  element={<SalesCreatePage />}
-/>
-<Route
-  path="/sales"
-  element={<SalesListPage />}
-/>
-<Route
-  path="/payments/customer"
-  element={
-    <CustomerDueListPage />
-  }
-/>
+            path="/payments/customer/:saleId"
+            element={<ReceivePaymentPage />}
+          />
+          <Route path="/payments/supplier" element={<SupplierDueListPage />} />
 
-<Route
-  path="/payments/customer/:saleId"
-  element={
-    <ReceivePaymentPage />
-  }
-/>
-<Route
-  path="/payments/supplier"
-  element={
-    <SupplierDueListPage />
-  }
-/>
+          <Route
+            path="/payments/supplier/:purchaseId"
+            element={<PaySupplierPage />}
+          />
+          <Route path="/reports/inventory" element={<InventoryReportPage />} />
+          <Route path="/reports/sales" element={<SalesReportPage />} />
+          <Route
+            path="/reports/customer-ledger"
+            element={<CustomerLedgerPage />}
+          />
+          <Route
+            path="/reports/supplier-ledger"
+            element={<SupplierLedgerPage />}
+          />
 
-<Route
-  path="/payments/supplier/:purchaseId"
-  element={
-    <PaySupplierPage />
-  }
+          <Route path="/reports/profit-loss" element={<ProfitLossPage />} />
+          <Route path="/analytics" element={<DashboardAnalyticsPage />} />
+          <Route path="/reports/purchases" element={<PurchaseReportPage />} />
+          <Route path="/due-reminders" element={<DueReminderPage />} />
+          <Route path="/sales-history" element={<SalesHistoryPage />} />
+          <Route path="/sales-returns" element={<SalesReturnPage />} />
+          <Route
+            path="/expense-categories"
+            element={<ExpenseCategoriesPage />}
+          />
+          <Route
+  path="/expenses"
+  element={<ExpenseListPage />}
+
 />
 <Route
-  path="/reports/inventory"
+  path="/expenses/edit/:id"
   element={
-    <InventoryReportPage />
-  }
-/>
-<Route
-  path="/reports/sales"
-  element={
-    <SalesReportPage />
-  }
-/>
-<Route
-  path="/reports/customer-ledger"
-  element={
-    <CustomerLedgerPage />
+    <EditExpensePage />
   }
 />
 

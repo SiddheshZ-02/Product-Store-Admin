@@ -88,4 +88,16 @@ export const customerService = {
 
     if (error) throw error;
   },
+
+  
+  async getDueCustomers() {
+  const { data, error } =
+    await supabase.rpc(
+      "get_due_customers"
+    );
+
+  if (error) throw error;
+
+  return data;
+},
 };

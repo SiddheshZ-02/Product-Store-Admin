@@ -11,4 +11,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: ["recharts", "react-is"],
+  },
+  server: {
+    fs: {
+      allow: [path.resolve(__dirname)],
+    },
+  },
+  ssr: {
+    noExternal: ["recharts"],
+  },
 });

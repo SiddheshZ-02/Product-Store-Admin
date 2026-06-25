@@ -8,7 +8,7 @@ export interface CreateSalePayload {
 
   p_paid_amount: number;
 
-  p_notes?: string;
+  p_notes?: string | null;
 
   p_items: SaleItem[];
 }

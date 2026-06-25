@@ -8,11 +8,11 @@ import { toast } from "sonner";
 
 import { salesService } from "@/services/salesService";
 
-export const useSales = () =>
+
+export const useSales = (from = "", to = "") =>
   useQuery({
-    queryKey: ["sales"],
-    queryFn:
-      salesService.getSales,
+    queryKey: ["sales", from, to],
+    queryFn: () => salesService.getSales(from, to),
   });
 
 export const useCreateSale =
@@ -45,5 +45,17 @@ export const useCreateSale =
           "Sale Created"
         );
       },
-    });
+    });    
   };
+
+  
+  export const useSalesHistory =
+  () =>
+    useQuery({
+      queryKey: [
+        "sales-history",
+      ],
+
+      queryFn:
+        salesService.getSalesHistory,
+    });

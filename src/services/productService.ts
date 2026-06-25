@@ -2,21 +2,32 @@ import { supabase } from "@/lib/supabase";
 import type { Product, ProductPayload } from "@/types/product.types";
 
 export const productService = {
-  async getProducts() {
-    const { data, error } = await supabase
-      .from("products")
-      .select(
-        `
-        id,
-        name,
-        selling_price
-      `)
-      .order("name");
+async getProducts(search?: string) {
+  let query = supabase
+    .from("products")
+    .select(`
+      id,
+      name,
+      selling_price,
+      inventory(
+        quantity
+      )
+    `);
 
-    if (error) throw error;
+  if (search) {
+    query = query.ilike(
+      "name",
+      `%${search}%`
+    );
+  }
 
-    return data;
-  },
+  const { data, error } =
+    await query;
+
+  if (error) throw error;
+
+  return data;
+},
 
   async getProductById(id: string): Promise<Product> {
     const { data, error } = await supabase

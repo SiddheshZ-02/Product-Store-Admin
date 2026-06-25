@@ -113,3 +113,15 @@ export const useDeleteCustomer =
       },
     });
   };
+
+  export const useDueCustomers =
+  () =>
+    useQuery({
+      queryKey: [
+        "due-customers",
+      ],
+      queryFn:
+        customerService.getDueCustomers,
+    });
+
+    

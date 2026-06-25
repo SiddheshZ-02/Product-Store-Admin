@@ -2,6 +2,8 @@ import { useMemo } from "react";
 
 import { useInventoryReport }
   from "@/hooks/useInventory";
+import ExportExcelButton from "@/components/common/ExportExcelButton";
+import ExportPdfButton from "@/components/common/ExportPdfButton";
 
 export default function InventoryReportPage() {
   const {
@@ -50,6 +52,38 @@ export default function InventoryReportPage() {
       };
     }, [data]);
 
+    const exportData =
+  data.map((item: any) => ({
+    Product:
+      item.products?.name,
+
+    Category:
+      item.products
+        ?.categories?.name,
+
+    Stock:
+      item.quantity,
+
+    PurchasePrice:
+      item.products
+        ?.purchase_price,
+
+    SellingPrice:
+      item.products
+        ?.selling_price,
+  }));
+
+
+const pdfRows =
+  data.map((item: any) => [
+    item.products?.name,
+    item.products?.categories?.name,
+    item.quantity,
+    item.products?.purchase_price,
+    item.products?.selling_price,
+  ]);
+
+
   if (isLoading)
     return <div>Loading...</div>;
 
@@ -60,6 +94,22 @@ export default function InventoryReportPage() {
       </h1>
 
       {/* Summary */}
+      <ExportExcelButton
+  data={exportData}
+  fileName="inventory-report"
+/>
+<ExportPdfButton
+  title="Inventory Report"
+  fileName="inventory-report"
+  columns={[
+    "Product",
+    "Category",
+    "Stock",
+    "Purchase Price",
+    "Selling Price",
+  ]}
+  rows={pdfRows}
+/>
 
       <div className="grid grid-cols-3 gap-4">
         <div className="border rounded-lg p-4">

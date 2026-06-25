@@ -11,6 +11,26 @@ export const useCustomers =
         ledgerService.getCustomers,
     });
 
+
+export const useCustomerLedger =
+(
+  customerId: string
+) =>
+  useQuery({
+    queryKey: [
+      "customer-ledger",
+      customerId,
+    ],
+
+    enabled:
+      !!customerId,
+
+    queryFn: () =>
+      ledgerService.getCustomerLedger(
+        customerId
+      ),
+  });
+
 export const useCustomerSales =
   (customerId?: string) =>
     useQuery({
@@ -42,5 +62,41 @@ export const useCustomerPayments =
       queryFn: () =>
         ledgerService.getCustomerPayments(
           customerId!
+        ),
+    });
+
+    export const useSuppliers =
+  () =>
+    useQuery({
+      queryKey: ["suppliers"],
+      queryFn:
+        ledgerService.getSuppliers,
+    });
+
+export const useSupplierPurchases =
+  (supplierId?: string) =>
+    useQuery({
+      queryKey: [
+        "supplier-purchases",
+        supplierId,
+      ],
+      enabled: !!supplierId,
+      queryFn: () =>
+        ledgerService.getSupplierPurchases(
+          supplierId!
+        ),
+    });
+
+export const useSupplierPayments =
+  (supplierId?: string) =>
+    useQuery({
+      queryKey: [
+        "supplier-payments",
+        supplierId,
+      ],
+      enabled: !!supplierId,
+      queryFn: () =>
+        ledgerService.getSupplierPayments(
+          supplierId!
         ),
     });

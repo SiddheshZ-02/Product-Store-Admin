@@ -18,7 +18,7 @@ export default function Sidebar() {
           return (
             <NavLink
               key={item.path}
-              to={item.path}
+              to={item.path || "/"}
               className={({ isActive }) =>
                 `
                 flex items-center gap-3

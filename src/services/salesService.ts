@@ -9,25 +9,38 @@ export const salesService = {
 
     return data;
   },
+  async getSalesHistory() {
+  const { data, error } =
+    await supabase
+      .from("sales")
+      .select(`
+        id,
+        invoice_number,
+        sale_date,
+        total_amount,
+        paid_amount,
+        due_amount,
+        payment_status,
+        customers!sales_customer_id_fkey(
+          customer_name
+        )
+      `)
+      .order("sale_date", {
+        ascending: false,
+      });
 
-  async getSales() {
+  if (error) throw error;
+
+  return data;
+},
+
+  async getSales(from: string, to: string) {
     const { data, error } = await supabase
       .from("sales")
-      .select(
-        `
-      id,
-      invoice_number,
-      sale_date,
-      total_amount,
-      paid_amount,
-      due_amount,
-      payment_status,
-      customers (
-        customer_name
-      )
-    `,
-      )
-      .order("created_at", {
+      .select("*")
+      .gte("sale_date", from)
+      .lte("sale_date", to)
+      .order("sale_date", {
         ascending: false,
       });
 
@@ -36,3 +49,31 @@ export const salesService = {
     return data;
   },
 };
+
+export const reportService = {
+  async getSalesReport(from: string, to: string) {
+    const { data, error } = await supabase
+      .from("sales")
+      .select(
+        `
+          *,
+          customers(
+            customer_name
+          )
+        `,
+      )
+      .gte("sale_date", from)
+      .lte("sale_date", to)
+      .order("sale_date", {
+        ascending: false,
+      });
+
+    if (error) throw error;
+
+    return data;
+  },
+
+
+};
+
+
