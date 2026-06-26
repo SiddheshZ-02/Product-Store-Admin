@@ -35,7 +35,11 @@ export default function LoginPage() {
 
       toast.success("Login successful");
 
-      navigate("/dashboard");
+      if (profile.role === "SUPER_ADMIN") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -43,12 +47,11 @@ export default function LoginPage() {
     }
   };
 
-
   useEffect(() => {
-  if (user) {
-    navigate("/dashboard");
-  }
-}, [user, navigate]);
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   return (
     <div className="w-full max-w-md border rounded-lg p-6">

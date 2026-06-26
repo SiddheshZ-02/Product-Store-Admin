@@ -64,12 +64,13 @@ export const useAuthStore =
       }
     },
 
-    setUser: (user, profile) =>
-      set({
-        user,
-        profile,
-      }),
-
+  setUser: (user, profile) =>
+  set({
+    user,
+    profile,
+    loading: false,
+  }),
+  
     logout: async () => {
       await authService.logout();
 

@@ -1,17 +1,28 @@
 import { supabase } from "@/lib/supabase";
 
-import type {
-  CreateSalesReturnPayload,
-} from "@/types/salesReturn.types";
-
 export const salesReturnService = {
-  async createReturn(
-    payload: CreateSalesReturnPayload
-  ) {
+  async createReturn(payload: {
+    sale_id: string;
+    product_id: string;
+    quantity: number;
+    reason?: string;
+  }) {
     const { data, error } =
       await supabase.rpc(
         "create_sales_return",
-        payload
+        {
+          p_sale_id:
+            payload.sale_id,
+
+          p_product_id:
+            payload.product_id,
+
+          p_quantity:
+            payload.quantity,
+
+          p_reason:
+            payload.reason,
+        }
       );
 
     if (error) throw error;
@@ -25,8 +36,11 @@ export const salesReturnService = {
         .from("sales_returns")
         .select(`
           *,
-          customers(
-            customer_name
+          sales(
+            invoice_number
+          ),
+          products(
+            name
           )
         `)
         .order(
@@ -40,4 +54,20 @@ export const salesReturnService = {
 
     return data;
   },
+  
+  async getSaleItems(
+  saleId: string
+) {
+  const { data, error } =
+    await supabase.rpc(
+      "get_sale_items_for_return",
+      {
+        p_sale_id: saleId,
+      }
+    );
+
+  if (error) throw error;
+
+  return data;
+},
 };

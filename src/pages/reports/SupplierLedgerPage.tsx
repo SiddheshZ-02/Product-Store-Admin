@@ -1,21 +1,11 @@
-import {
-  useState,
-  useMemo,
-} from "react";
+import { useSupplierPayments, useSupplierPurchases, useSuppliers } from "@/hooks/useSuppliers";
+import { useMemo, useState } from "react";
 
-import {
-  useSuppliers,
-  useSupplierPurchases,
-  useSupplierPayments,
-} from "@/hooks/useLedger";
-import ExportExcelButton from "@/components/common/ExportExcelButton";
-import ExportPdfButton from "@/components/common/ExportPdfButton";
 
 export default function SupplierLedgerPage() {
-  const [
-    supplierId,
-    setSupplierId,
-  ] = useState("");
+
+  const [supplierId, setSupplierId] =
+    useState("");
 
   const {
     data: suppliers = [],
@@ -37,6 +27,7 @@ export default function SupplierLedgerPage() {
 
   const transactions =
     useMemo(() => {
+
       const purchaseRows =
         purchases.map(
           (purchase: any) => ({
@@ -55,9 +46,7 @@ export default function SupplierLedgerPage() {
 
       const paymentRows =
         payments.map(
-          (
-            payment: any
-          ) => ({
+          (payment: any) => ({
             date:
               payment.payment_date,
 
@@ -75,10 +64,7 @@ export default function SupplierLedgerPage() {
         ...purchaseRows,
         ...paymentRows,
       ].sort(
-        (
-          a,
-          b
-        ) =>
+        (a, b) =>
           new Date(
             a.date
           ).getTime() -
@@ -91,36 +77,45 @@ export default function SupplierLedgerPage() {
       payments,
     ]);
 
+  const totalPurchase =
+    purchases.reduce(
+      (
+        sum: number,
+        row: any
+      ) =>
+        sum +
+        Number(
+          row.total_amount
+        ),
+      0
+    );
+
+  const totalPaid =
+    payments.reduce(
+      (
+        sum: number,
+        row: any
+      ) =>
+        sum +
+        Number(
+          row.amount
+        ),
+      0
+    );
+
+  const due =
+    totalPurchase -
+    totalPaid;
+
   let balance = 0;
-
-
-  const pdfRows =
-  transactions.map((row) => [
-    row.date,
-    row.type,
-    row.amount,
-  ]);
 
   return (
     <div className="space-y-6">
+
       <h1 className="text-3xl font-bold">
         Supplier Ledger
       </h1>
-      <ExportExcelButton
-  data={transactions}
-  fileName="supplier-ledger"
-/>
 
-<ExportPdfButton
-  title="Supplier Ledger"
-  fileName="supplier-ledger"
-  columns={[
-    "Date",
-    "Type",
-    "Amount",
-  ]}
-  rows={pdfRows}
-/>
       <select
         value={supplierId}
         onChange={(e) =>
@@ -128,22 +123,17 @@ export default function SupplierLedgerPage() {
             e.target.value
           )
         }
+        className="border p-2 rounded"
       >
         <option value="">
           Select Supplier
         </option>
 
         {suppliers.map(
-          (
-            supplier: any
-          ) => (
+          (supplier: any) => (
             <option
-              key={
-                supplier.id
-              }
-              value={
-                supplier.id
-              }
+              key={supplier.id}
+              value={supplier.id}
             >
               {
                 supplier.supplier_name
@@ -151,24 +141,66 @@ export default function SupplierLedgerPage() {
             </option>
           )
         )}
+
       </select>
 
+      <div className="grid grid-cols-3 gap-4">
+
+        <div className="border rounded-lg p-4">
+          <p>Total Purchase</p>
+
+          <h2 className="text-2xl font-bold">
+            ₹
+            {totalPurchase.toLocaleString()}
+          </h2>
+        </div>
+
+        <div className="border rounded-lg p-4">
+          <p>Total Paid</p>
+
+          <h2 className="text-2xl font-bold">
+            ₹
+            {totalPaid.toLocaleString()}
+          </h2>
+        </div>
+
+        <div className="border rounded-lg p-4">
+          <p>Outstanding</p>
+
+          <h2 className="text-2xl font-bold text-red-600">
+            ₹
+            {due.toLocaleString()}
+          </h2>
+        </div>
+
+      </div>
+
       <table className="w-full border">
+
         <thead>
+
           <tr>
+
             <th>Date</th>
+
             <th>Type</th>
+
             <th>Amount</th>
+
             <th>Balance</th>
+
           </tr>
+
         </thead>
 
         <tbody>
+
           {transactions.map(
             (
               row,
               index
             ) => {
+
               if (
                 row.type ===
                 "PURCHASE"
@@ -182,47 +214,34 @@ export default function SupplierLedgerPage() {
 
               return (
                 <tr
-                  key={
-                    index
-                  }
+                  key={index}
                 >
+
                   <td>
-                    {
-                      row.date
-                    }
+                    {row.date}
                   </td>
 
                   <td>
-                    {
-                      row.type
-                    }
+                    {row.type}
                   </td>
 
                   <td>
-                    ₹
-                    {
-                      row.amount
-                    }
+                    ₹{row.amount}
                   </td>
 
                   <td>
-                    ₹
-                    {balance}
+                    ₹{balance}
                   </td>
+
                 </tr>
               );
             }
           )}
+
         </tbody>
+
       </table>
 
-      <div className="border p-4 rounded">
-        Outstanding Payable:
-
-        <strong>
-          ₹{balance}
-        </strong>
-      </div>
     </div>
   );
 }

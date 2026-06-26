@@ -7,6 +7,7 @@ import {
 import { toast } from "sonner";
 
 import { supplierService } from "@/services/supplierService";
+import { supplierLedgerService } from "@/services/supplierLedgerService";
 
 export const useSuppliers = () =>
   useQuery({
@@ -14,6 +15,41 @@ export const useSuppliers = () =>
     queryFn:
       supplierService.getSuppliers,
   });
+
+
+
+export const useSupplierPurchases =
+  (supplierId: string) =>
+    useQuery({
+      queryKey: [
+        "supplier-purchases",
+        supplierId,
+      ],
+
+      enabled: !!supplierId,
+
+      queryFn: () =>
+        supplierLedgerService.getPurchases(
+          supplierId
+        ),
+    });
+
+export const useSupplierPayments =
+  (supplierId: string) =>
+    useQuery({
+      queryKey: [
+        "supplier-payments",
+        supplierId,
+      ],
+
+      enabled: !!supplierId,
+
+      queryFn: () =>
+        supplierLedgerService.getPayments(
+          supplierId
+        ),
+    });
+
 
 export const useSupplier = (
   id: string

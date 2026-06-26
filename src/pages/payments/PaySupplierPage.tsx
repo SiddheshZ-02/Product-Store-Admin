@@ -1,75 +1,108 @@
-import {
-  useForm,
-} from "react-hook-form";
+import { useState } from "react";
 
-import {
-  useParams,
-  useNavigate,
-} from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
-import { usePaySupplier }
-  from "@/hooks/usePayments";
+import { Input } from "@/components/ui/input";
+
+import { useSuppliers } from "@/hooks/useSuppliers";
+
+import { useCreateSupplierPayment } from "@/hooks/useSupplierPayments";
 
 export default function PaySupplierPage() {
-  const { purchaseId } =
-    useParams();
+  const { data: suppliers = [] } =
+    useSuppliers();
 
-  const navigate =
-    useNavigate();
+  const createPayment =
+    useCreateSupplierPayment();
 
-  const mutation =
-    usePaySupplier();
+  const [supplierId, setSupplierId] =
+    useState("");
 
-  const {
-    register,
-    handleSubmit,
-  } = useForm({
-    defaultValues: {
-      p_payment_method:
-        "CASH",
-    },
-  });
+  const [amount, setAmount] =
+    useState("");
 
-  const submit =
-    async (data: any) => {
-      await mutation.mutateAsync({
-        p_purchase_id:
-          purchaseId!,
-        ...data,
-      });
+  const [paymentMethod, setPaymentMethod] =
+    useState("CASH");
 
-      navigate(
-        "/payments/supplier"
-      );
-    };
+  const [referenceNumber, setReferenceNumber] =
+    useState("");
+
+  const [notes, setNotes] =
+    useState("");
+
+  const handleSave = () => {
+    createPayment.mutate({
+      supplier_id:
+        supplierId,
+
+      payment_date:
+        new Date()
+          .toISOString()
+          .split("T")[0],
+
+      amount:
+        Number(amount),
+
+      payment_method:
+        paymentMethod,
+
+      reference_number:
+        referenceNumber,
+
+      notes,
+    });
+  };
 
   return (
-    <form
-      onSubmit={handleSubmit(
-        submit
-      )}
-      className="space-y-4 max-w-lg"
-    >
+    <div className="space-y-6 max-w-xl">
       <h1 className="text-3xl font-bold">
         Pay Supplier
       </h1>
 
-      <input
+      <select
+        className="w-full border rounded-lg p-3"
+        value={supplierId}
+        onChange={(e) =>
+          setSupplierId(
+            e.target.value
+          )
+        }
+      >
+        <option value="">
+          Select Supplier
+        </option>
+
+        {suppliers.map(
+          (supplier: any) => (
+            <option
+              key={supplier.id}
+              value={supplier.id}
+            >
+              {supplier.supplier_name}
+            </option>
+          )
+        )}
+      </select>
+
+      <Input
         type="number"
         placeholder="Amount"
-        {...register(
-          "p_amount",
-          {
-            valueAsNumber:
-              true,
-          }
-        )}
+        value={amount}
+        onChange={(e) =>
+          setAmount(
+            e.target.value
+          )
+        }
       />
 
       <select
-        {...register(
-          "p_payment_method"
-        )}
+        className="w-full border rounded-lg p-3"
+        value={paymentMethod}
+        onChange={(e) =>
+          setPaymentMethod(
+            e.target.value
+          )
+        }
       >
         <option value="CASH">
           CASH
@@ -86,31 +119,33 @@ export default function PaySupplierPage() {
         <option value="BANK_TRANSFER">
           BANK TRANSFER
         </option>
-
-        <option value="CHEQUE">
-          CHEQUE
-        </option>
       </select>
 
-      <input
+      <Input
         placeholder="Reference Number"
-        {...register(
-          "p_reference_number"
-        )}
+        value={referenceNumber}
+        onChange={(e) =>
+          setReferenceNumber(
+            e.target.value
+          )
+        }
       />
 
-      <textarea
+      <Input
         placeholder="Notes"
-        {...register(
-          "p_notes"
-        )}
+        value={notes}
+        onChange={(e) =>
+          setNotes(
+            e.target.value
+          )
+        }
       />
 
-      <button
-        type="submit"
+      <Button
+        onClick={handleSave}
       >
-        Pay Supplier
-      </button>
-    </form>
+        Save Payment
+      </Button>
+    </div>
   );
 }

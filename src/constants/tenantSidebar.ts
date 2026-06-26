@@ -11,7 +11,7 @@ import {
   Shield,
 } from "lucide-react";
 
-export const sidebarItems = [
+export const tenantSidebar = [
   {
     label: "Dashboard",
     icon: LayoutDashboard,

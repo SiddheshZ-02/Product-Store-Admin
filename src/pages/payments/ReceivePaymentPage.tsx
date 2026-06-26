@@ -1,75 +1,110 @@
-import {
-  useForm,
-} from "react-hook-form";
+import { useState } from "react";
 
-import {
-  useParams,
-  useNavigate,
-} from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
-import { useReceivePayment }
-  from "@/hooks/usePayments";
+import { Input } from "@/components/ui/input";
+
+import { useCustomers } from "@/hooks/useCustomers";
+
+import { useCreateCustomerPayment } from "@/hooks/useCustomerPayments";
 
 export default function ReceivePaymentPage() {
-  const { saleId } =
-    useParams();
+  const { data: customers = [] } =
+    useCustomers();
 
-  const navigate =
-    useNavigate();
+  const createPayment =
+    useCreateCustomerPayment();
 
-  const mutation =
-    useReceivePayment();
+  const [customerId, setCustomerId] =
+    useState("");
 
-  const {
-    register,
-    handleSubmit,
-  } = useForm({
-    defaultValues: {
-      p_payment_method:
-        "CASH",
-    },
-  });
+  const [amount, setAmount] =
+    useState("");
 
-  const submit =
-    async (data: any) => {
-      await mutation.mutateAsync({
-        p_sale_id:
-          saleId!,
-        ...data,
-      });
+  const [paymentMethod, setPaymentMethod] =
+    useState("CASH");
 
-      navigate(
-        "/payments/customer"
-      );
-    };
+  const [referenceNumber, setReferenceNumber] =
+    useState("");
+
+  const [notes, setNotes] =
+    useState("");
+
+  const handleSubmit = () => {
+    createPayment.mutate({
+      customer_id:
+        customerId,
+
+      payment_date:
+        new Date()
+          .toISOString()
+          .split("T")[0],
+
+      amount:
+        Number(amount),
+
+      payment_method:
+        paymentMethod,
+
+      reference_number:
+        referenceNumber,
+
+      notes,
+    });
+  };
 
   return (
-    <form
-      onSubmit={handleSubmit(
-        submit
-      )}
-      className="space-y-4 max-w-lg"
-    >
+    <div className="space-y-6 max-w-xl">
       <h1 className="text-3xl font-bold">
-        Receive Payment
+        Receive Customer Payment
       </h1>
 
-      <input
-        type="number"
-        placeholder="Amount"
-        {...register(
-          "p_amount",
-          {
-            valueAsNumber:
-              true,
-          }
+      <select
+        className="w-full border rounded-lg p-3"
+        value={customerId}
+        onChange={(e) =>
+          setCustomerId(
+            e.target.value
+          )
+        }
+      >
+        <option value="">
+          Select Customer
+        </option>
+
+        {customers.map(
+          (customer: any) => (
+            <option
+              key={customer.id}
+              value={customer.id}
+            >
+              {
+                customer.customer_name
+              }
+            </option>
+          )
         )}
+      </select>
+
+      <Input
+        placeholder="Amount"
+        type="number"
+        value={amount}
+        onChange={(e) =>
+          setAmount(
+            e.target.value
+          )
+        }
       />
 
       <select
-        {...register(
-          "p_payment_method"
-        )}
+        className="w-full border rounded-lg p-3"
+        value={paymentMethod}
+        onChange={(e) =>
+          setPaymentMethod(
+            e.target.value
+          )
+        }
       >
         <option value="CASH">
           CASH
@@ -86,31 +121,35 @@ export default function ReceivePaymentPage() {
         <option value="BANK_TRANSFER">
           BANK TRANSFER
         </option>
-
-        <option value="CHEQUE">
-          CHEQUE
-        </option>
       </select>
 
-      <input
+      <Input
         placeholder="Reference Number"
-        {...register(
-          "p_reference_number"
-        )}
+        value={referenceNumber}
+        onChange={(e) =>
+          setReferenceNumber(
+            e.target.value
+          )
+        }
       />
 
-      <textarea
+      <Input
         placeholder="Notes"
-        {...register(
-          "p_notes"
-        )}
+        value={notes}
+        onChange={(e) =>
+          setNotes(
+            e.target.value
+          )
+        }
       />
 
-      <button
-        type="submit"
+      <Button
+        onClick={
+          handleSubmit
+        }
       >
-        Receive Payment
-      </button>
-    </form>
+        Save Payment
+      </Button>
+    </div>
   );
 }

@@ -39,8 +39,7 @@ export default function CustomerLedgerPage() {
             date:
               sale.sale_date,
 
-            type:
-              "SALE",
+            type: "SALE",
 
             amount:
               Number(
@@ -113,7 +112,7 @@ export default function CustomerLedgerPage() {
       0
     );
 
-  const outstandingBalance =
+  const outstanding =
     totalSales -
     totalPayments;
 
@@ -122,8 +121,10 @@ export default function CustomerLedgerPage() {
       (row) => ({
         Date:
           row.date,
+
         Type:
           row.type,
+
         Amount:
           row.amount,
       })
@@ -143,21 +144,14 @@ export default function CustomerLedgerPage() {
   return (
     <div className="space-y-6">
 
-      {/* Header */}
-
       <div className="flex justify-between items-center">
 
-        <div>
-          <h1 className="text-3xl font-bold">
-            Customer Ledger
-          </h1>
-
-          <p className="text-muted-foreground">
-            Customer transaction history
-          </p>
-        </div>
+        <h1 className="text-3xl font-bold">
+          Customer Ledger
+        </h1>
 
         <div className="flex gap-2">
+
           <ExportExcelButton
             data={exportData}
             fileName="customer-ledger"
@@ -173,11 +167,10 @@ export default function CustomerLedgerPage() {
             ]}
             rows={pdfRows}
           />
+
         </div>
 
       </div>
-
-      {/* Customer Select */}
 
       <div>
 
@@ -190,7 +183,7 @@ export default function CustomerLedgerPage() {
               e.target.value
             )
           }
-          className="border rounded-lg px-3 py-2 w-full max-w-sm"
+          className="border rounded-md p-2 min-w-[300px]"
         >
           <option value="">
             Select Customer
@@ -214,7 +207,6 @@ export default function CustomerLedgerPage() {
               </option>
             )
           )}
-
         </select>
 
       </div>
@@ -252,12 +244,12 @@ export default function CustomerLedgerPage() {
         <div className="border rounded-lg p-4">
 
           <p className="text-sm text-muted-foreground">
-            Outstanding Balance
+            Outstanding
           </p>
 
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-2xl font-bold text-red-600">
             ₹
-            {outstandingBalance.toLocaleString()}
+            {outstanding.toLocaleString()}
           </h2>
 
         </div>
@@ -272,7 +264,7 @@ export default function CustomerLedgerPage() {
 
           <thead>
 
-            <tr className="border-b bg-muted/50">
+            <tr className="border-b bg-muted">
 
               <th className="p-3 text-left">
                 Date
@@ -296,14 +288,17 @@ export default function CustomerLedgerPage() {
 
           <tbody>
 
-            {transactions.length === 0 ? (
+            {transactions.length ===
+            0 ? (
               <tr>
+
                 <td
                   colSpan={4}
-                  className="p-8 text-center"
+                  className="text-center p-8"
                 >
-                  No Transactions Found
+                  No Transactions
                 </td>
+
               </tr>
             ) : (
               transactions.map(
@@ -348,7 +343,7 @@ export default function CustomerLedgerPage() {
                         {row.amount.toLocaleString()}
                       </td>
 
-                      <td className="p-3 font-medium">
+                      <td className="p-3 font-semibold">
                         ₹
                         {runningBalance.toLocaleString()}
                       </td>

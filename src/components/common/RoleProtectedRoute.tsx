@@ -4,32 +4,50 @@ import { useAuth } from "@/hooks/useAuth";
 
 interface Props {
   children: React.ReactNode;
+
+  roles: string[];
 }
 
-export default function ProtectedRoute({
+export default function RoleProtectedRoute({
   children,
+  roles,
 }: Props) {
   const {
-    user,
+    profile,
     loading,
   } = useAuth();
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div>
         Loading...
       </div>
     );
   }
 
-  if (!user) {
+  if (!profile) {
     return (
       <Navigate
         to="/login"
-        replace
       />
     );
   }
 
-  return children;
+  if (
+    !roles.includes(
+      profile.role
+    )
+  ) {
+    return (
+      <Navigate
+        to="/dashboard"
+      />
+    );
+  }
+
+  return (
+    <>
+      {children}
+    </>
+  );
 }

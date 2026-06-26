@@ -39,6 +39,15 @@ import ExpenseCategoriesPage from "@/pages/expenses/ExpenseCategoriesPage";
 import CreateExpensePage from "@/pages/expenses/CreateExpensePage";
 import ExpenseListPage from "@/pages/expenses/ExpenseListPage";
 import EditExpensePage from "@/pages/expenses/EditExpensePage";
+import InventoryValuationPage from "@/pages/reports/InventoryValuationPage";
+import CustomerPaymentHistoryPage from "@/pages/payments/CustomerPaymentHistoryPage";
+import PurchaseReturnHistoryPage from "@/pages/purchase-returns/PurchaseReturnHistoryPage";
+import CreatePurchaseReturnPage from "@/pages/purchase-returns/CreatePurchaseReturnPage";
+import CashbookPage from "@/pages/reports/CashbookPage";
+import RoleRoute from "@/components/common/RoleRoute";
+import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
+import { ROLES } from "@/constants/roles";
+import TenantListPage from "@/pages/admin/TenantListPage";
 
 export default function AppRouter() {
   return (
@@ -115,18 +124,59 @@ export default function AppRouter() {
             path="/expense-categories"
             element={<ExpenseCategoriesPage />}
           />
+          <Route path="/expenses" element={<ExpenseListPage />} />
+          <Route path="/expenses/edit/:id" element={<EditExpensePage />} />
           <Route
-  path="/expenses"
-  element={<ExpenseListPage />}
+            path="/reports/inventory-valuation"
+            element={<InventoryValuationPage />}
+          />
+          <Route path="/payments/receive" element={<ReceivePaymentPage />} />
+          <Route
+            path="/payments/history"
+            element={<CustomerPaymentHistoryPage />}
+          />
+          <Route
+            path="/payments/history"
+            element={<CustomerPaymentHistoryPage />}
+          />
+          <Route
+            path="/purchase-returns"
+            element={<PurchaseReturnHistoryPage />}
+          />
 
+          <Route
+            path="/purchase-returns/create"
+            element={<CreatePurchaseReturnPage />}
+          />
+          <Route
+  path="/reports/cashbook"
+  element={<CashbookPage />}
 />
+
 <Route
-  path="/expenses/edit/:id"
+  path="/admin/dashboard"
   element={
-    <EditExpensePage />
+    <RoleRoute
+      allow={[
+        ROLES.SUPER_ADMIN,
+      ]}
+    >
+      <AdminDashboardPage />
+    </RoleRoute>
   }
 />
-
+<Route
+  path="/admin/tenants"
+  element={
+    <RoleRoute
+      allow={[
+        ROLES.SUPER_ADMIN,
+      ]}
+    >
+      <TenantListPage />
+    </RoleRoute>
+  }
+/>
         </Route>
       </Routes>
     </BrowserRouter>
