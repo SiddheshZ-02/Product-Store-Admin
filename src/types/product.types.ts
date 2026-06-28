@@ -40,6 +40,7 @@ export interface Product {
 }
 
 export interface ProductPayload {
+  tenant_id?: string;
   category_id: string;
 
   name: string;

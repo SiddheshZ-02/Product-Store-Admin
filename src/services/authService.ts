@@ -12,6 +12,27 @@ export const authService = {
 
     if (error) throw error;
 
+    // Check tenant status
+    if (data.user) {
+      const profile = await this.getProfile(data.user.id);
+      
+      if (profile.role !== "SUPER_ADMIN" && profile.tenant_id) {
+        const { data: tenant, error: tenantError } = await supabase
+          .from("tenants")
+          .select("status")
+          .eq("id", profile.tenant_id)
+          .single();
+
+        if (tenantError) throw tenantError;
+        
+        if (tenant.status === "suspended") {
+          // Logout the user
+          await supabase.auth.signOut();
+          throw new Error("Your account has been suspended. Please contact support.");
+        }
+      }
+    }
+
     return data;
   },
 

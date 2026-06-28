@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 import ProductForm from "@/components/forms/ProductForm";
+import BackButton from "@/components/common/BackButton";
 
 
 import {
@@ -18,18 +20,26 @@ export default function ProductCreatePage() {
   const handleSubmit = async (
     values: ProductFormData
   ) => {
-    await createMutation.mutateAsync(
-      values
-    );
+    try {
+      await createMutation.mutateAsync(
+        values
+      );
 
-    navigate("/products");
+      navigate("/products");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create product");
+      console.error(error);
+    }
   };
 
   return (
     <div className="max-w-5xl">
-      <h1 className="text-3xl font-bold mb-6">
-        Create Product
-      </h1>
+      <div className="flex items-center gap-2 mb-6">
+        <BackButton to="/products" />
+        <h1 className="text-3xl font-bold">
+          Create Product
+        </h1>
+      </div>
 
       <ProductForm
         onSubmit={

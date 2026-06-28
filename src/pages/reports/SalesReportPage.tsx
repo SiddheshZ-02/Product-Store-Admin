@@ -1,6 +1,8 @@
 // src/pages/reports/SalesReportPage.tsx
 
 import { useMemo, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import TableSkeleton from "@/components/common/TableSkeleton";
 
 import DateFilterComponent from "@/components/common/DateFilter";
 
@@ -15,6 +17,30 @@ import type { DateFilter } from "@/types/report";
 import { Button } from "@/components/ui/button";
 import { openWhatsApp } from "@/utils/whatsapp";
 import { invoiceTemplate } from "@/utils/whatsappTemplates";
+
+function SalesReportSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-8 w-48" />
+        <div className="flex gap-2">
+          <Skeleton className="h-10 w-32" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+      </div>
+      <Skeleton className="h-10 w-full" />
+      <div className="grid grid-cols-4 gap-4">
+        {[1,2,3,4].map(i => (
+          <div key={i} className="border rounded-lg p-4">
+            <Skeleton className="h-4 w-24 mb-2" />
+            <Skeleton className="h-8 w-32" />
+          </div>
+        ))}
+      </div>
+      <TableSkeleton columns={8} />
+    </div>
+  );
+}
 
 export default function SalesReportPage() {
   const [filter, setFilter] = useState<DateFilter>({
@@ -75,9 +101,9 @@ export default function SalesReportPage() {
     sale.payment_status,
   ]);
 
-  // if (isLoading) {
-  //   return <div>Loading Sales Report...</div>;
-  // }
+  if (isLoading) {
+    return <SalesReportSkeleton />;
+  }
 
   return (
     <div className="space-y-6">
@@ -108,9 +134,6 @@ export default function SalesReportPage() {
         value={filter}
         onChange={(value) => setFilter(value)}
       />
-      {isLoading && (
-        <div className="border rounded-lg p-4">Loading sales report...</div>
-      )}
 
       {/* Summary Cards */}
 
@@ -172,7 +195,7 @@ export default function SalesReportPage() {
           <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center p-8">
+                <td colSpan={8} className="text-center p-8">
                   No Sales Found
                 </td>
               </tr>

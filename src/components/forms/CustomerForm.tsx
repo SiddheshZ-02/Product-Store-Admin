@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { customerSchema, type CustomerFormData } from "@/types/customerSchema";
 
 
@@ -36,39 +37,71 @@ export default function CustomerForm({
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-5"
     >
-      <Input
-        placeholder="Customer Name"
-        {...register("customer_name")}
-      />
+      <div className="space-y-2">
+        <Label htmlFor="customer_name">Customer Name *</Label>
+        <Input
+          id="customer_name"
+          placeholder="Customer Name"
+          {...register("customer_name")}
+        />
 
-      <p className="text-sm text-red-500">
-        {errors.customer_name?.message}
-      </p>
+        {errors.customer_name && (
+          <p className="text-sm text-red-500">
+            {errors.customer_name.message}
+          </p>
+        )}
+      </div>
 
-      <Input
-        placeholder="Phone Number"
-        {...register("phone")}
-      />
+      <div className="space-y-2">
+        <Label htmlFor="phone">Phone Number</Label>
+        <Input
+          id="phone"
+          placeholder="Phone Number"
+          {...register("phone")}
+        />
+      </div>
 
-      <Input
-        placeholder="Email"
-        {...register("email")}
-      />
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          placeholder="Email"
+          {...register("email")}
+        />
+        {errors.email && (
+          <p className="text-sm text-red-500">
+            {errors.email.message}
+          </p>
+        )}
+      </div>
 
-      <Input
-        placeholder="GST Number"
-        {...register("gst_number")}
-      />
+      <div className="space-y-2">
+        <Label htmlFor="gst_number">GST Number</Label>
+        <Input
+          id="gst_number"
+          placeholder="GST Number"
+          {...register("gst_number")}
+        />
+      </div>
 
-      <Textarea
-        placeholder="Address"
-        {...register("address")}
-      />
+      <div className="space-y-2">
+        <Label htmlFor="address">Address</Label>
+        <Textarea
+          id="address"
+          placeholder="Address"
+          {...register("address")}
+        />
+      </div>
 
-      <Textarea
-        placeholder="Notes"
-        {...register("notes")}
-      />
+      <div className="space-y-2">
+        <Label htmlFor="notes">Notes</Label>
+        <Textarea
+          id="notes"
+          placeholder="Notes"
+          {...register("notes")}
+        />
+      </div>
 
       <Button
         type="submit"

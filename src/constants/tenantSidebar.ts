@@ -7,8 +7,9 @@ import {
   Receipt,
   Boxes,
   Wallet,
-  BarChart3,
-  Shield,
+  Settings,
+  FileText,
+  TrendingUp,
 } from "lucide-react";
 
 export const tenantSidebar = [
@@ -17,13 +18,6 @@ export const tenantSidebar = [
     icon: LayoutDashboard,
     path: "/dashboard",
     roles: ["TENANT_OWNER", "SUPER_ADMIN"],
-  },
-
-  {
-    label: "Admin Dashboard",
-    icon: Shield,
-    path: "/admin",
-    roles: ["SUPER_ADMIN"],
   },
 
   {
@@ -64,7 +58,7 @@ export const tenantSidebar = [
   {
     label: "Inventory",
     icon: Boxes,
-    path: "/inventory",
+    path: "/inventory/adjustment",
     roles: ["TENANT_OWNER"],
   },
 
@@ -76,121 +70,23 @@ export const tenantSidebar = [
   },
 
   {
-    label: "Create Expense",
-    icon: Wallet,
-    path: "/expenses/create",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Expense Categories",
-    icon: Wallet,
-    path: "/expense-categories",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Sales History",
-    icon: Receipt,
-    path: "/sales-history",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Sales Returns",
-    icon: Receipt,
-    path: "/sales-returns",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Receive Payment",
-    icon: Wallet,
-    path: "/payments/receive",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Payment History",
-    icon: Wallet,
-    path: "/payments/history",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Purchase Return",
-    icon: ShoppingCart,
-    path: "/purchase-returns",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Analytics",
-    icon: BarChart3,
-    path: "/analytics",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Inventory Report",
-    icon: Boxes,
+    label: "Reports",
+    icon: FileText,
     path: "/reports/inventory",
     roles: ["TENANT_OWNER"],
   },
 
   {
-    label: "Sales Report",
-    icon: Receipt,
-    path: "/reports/sales",
+    label: "Analytics",
+    icon: TrendingUp,
+    path: "/analytics",
     roles: ["TENANT_OWNER"],
   },
 
   {
-    label: "Purchase Report",
-    icon: ShoppingCart,
-    path: "/reports/purchases",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Customer Ledger",
-    icon: Users,
-    path: "/reports/customer-ledger",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Supplier Ledger",
-    icon: Truck,
-    path: "/reports/supplier-ledger",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Profit & Loss",
-    icon: BarChart3,
-    path: "/reports/profit-loss",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Inventory Valuation",
-    icon: BarChart3,
-    path: "/reports/inventory-valuation",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Cashbook",
-    icon: BarChart3,
-    path: "/reports/cashbook",
-    roles: ["TENANT_OWNER"],
-  },
-
-  {
-    label: "Due Reminders",
-    icon: Users,
-    path: "/due-reminders",
+    label: "Settings",
+    icon: Settings,
+    path: "/settings",
     roles: ["TENANT_OWNER"],
   },
 ];

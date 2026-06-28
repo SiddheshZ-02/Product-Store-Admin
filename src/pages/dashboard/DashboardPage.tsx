@@ -6,6 +6,8 @@ import PurchaseChart from "@/components/dashboard/PurchaseChart";
 import RecentPurchasesCard from "@/components/dashboard/RecentPurchasesCard";
 import RecentSalesCard from "@/components/dashboard/RecentSalesCard";
 import TopProductsCard from "@/components/dashboard/TopProductsCard";
+import CardSkeleton from "@/components/common/CardSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import {
   useDashboard,
@@ -17,23 +19,63 @@ import {
 } from "@/hooks/useDashboard";
 import { getDateRange } from "@/utils/dateRange";
 
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-8">
+      <div>
+        <Skeleton className="h-8 w-48 mb-2" />
+        <Skeleton className="h-4 w-64" />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <CardSkeleton key={i} />
+        ))}
+      </div>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-xl border bg-card p-5">
+          <Skeleton className="h-6 w-32 mb-4" />
+          <Skeleton className="h-48 w-full" />
+        </div>
+        <div className="rounded-xl border bg-card p-5">
+          <Skeleton className="h-6 w-32 mb-4" />
+          <Skeleton className="h-48 w-full" />
+        </div>
+      </div>
+      <div className="rounded-xl border bg-card p-5">
+        <Skeleton className="h-6 w-32 mb-4" />
+        <Skeleton className="h-48 w-full" />
+      </div>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-xl border bg-card p-5">
+          <Skeleton className="h-6 w-32 mb-4" />
+          <Skeleton className="h-48 w-full" />
+        </div>
+        <div className="rounded-xl border bg-card p-5">
+          <Skeleton className="h-6 w-32 mb-4" />
+          <Skeleton className="h-48 w-full" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { from, to } = getDateRange("30days");
 
-  const { data: topProducts } = useDashboardTopProducts();
+  const { data: topProducts, isLoading: topProductsLoading } = useDashboardTopProducts();
 
-  const { data: lowStockProducts } = useLowStock();
+  const { data: lowStockProducts, isLoading: lowStockLoading } = useLowStock();
 
-  const { data: chartData } = useDashboardCharts(from, to);
+  const { data: chartData, isLoading: chartsLoading } = useDashboardCharts(from, to);
 
-  const { data: dashboardData, isLoading, error } = useDashboard();
+  const { data: dashboardData, isLoading: dashboardLoading, error } = useDashboard();
 
-  const { data: recentSales } = useRecentSales();
+  const { data: recentSales, isLoading: recentSalesLoading } = useRecentSales();
 
-  const { data: recentPurchases } = useRecentPurchases();
+  const { data: recentPurchases, isLoading: recentPurchasesLoading } = useRecentPurchases();
 
-  if (isLoading) {
-    return <div>Loading dashboard...</div>;
+  if (dashboardLoading || topProductsLoading || lowStockLoading || chartsLoading || recentSalesLoading || recentPurchasesLoading) {
+    return <DashboardSkeleton />;
   }
 
   if (error) {

@@ -2,8 +2,10 @@ import {
   useParams,
   useNavigate,
 } from "react-router-dom";
+import { toast } from "sonner";
 
 import SupplierForm from "@/components/forms/SupplierForm";
+import BackButton from "@/components/common/BackButton";
 
 import {
   useSupplier,
@@ -26,20 +28,27 @@ export default function SupplierEditPage() {
     useUpdateSupplier();
 
   if (isLoading)
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        Loading...
+      </div>
+    );
 
   if (!data)
     return (
-      <div>
+      <div className="flex items-center justify-center h-screen">
         Supplier not found
       </div>
     );
 
   return (
     <div className="max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6">
-        Edit Supplier
-      </h1>
+      <div className="flex items-center gap-2 mb-6">
+        <BackButton to="/suppliers" />
+        <h1 className="text-3xl font-bold">
+          Edit Supplier
+        </h1>
+      </div>
 
       <SupplierForm
         defaultValues={{
@@ -70,17 +79,22 @@ export default function SupplierEditPage() {
         onSubmit={async (
           values
         ) => {
-          await mutation.mutateAsync(
-            {
-              id,
-              payload:
-                values,
-            }
-          );
+          try {
+            await mutation.mutateAsync(
+              {
+                id,
+                payload:
+                  values,
+              }
+            );
 
-          navigate(
-            "/suppliers"
-          );
+            navigate(
+              "/suppliers"
+            );
+          } catch (error: any) {
+            toast.error(error.message || "Failed to update supplier");
+            console.error(error);
+          }
         }}
       />
     </div>

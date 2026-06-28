@@ -15,6 +15,12 @@ export default function RevenueChart({
   data,
 }: Props) {
   return (
+
+      <div className="border rounded-lg p-4">
+
+      <h2 className="font-semibold mb-4">
+        Sales Trend
+      </h2>
     <ResponsiveContainer
       width="100%"
       height={300}
@@ -32,5 +38,7 @@ export default function RevenueChart({
         />
       </LineChart>
     </ResponsiveContainer>
+</div>
+
   );
 }

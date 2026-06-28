@@ -1,39 +1,60 @@
 import { supabase } from "@/lib/supabase";
 import type { Product, ProductPayload } from "@/types/product.types";
+import { useAuthStore } from "@/store/authStore";
 
 export const productService = {
-async getProducts(search?: string) {
-  let query = supabase
-    .from("products")
-    .select(`
-      id,
-      name,
-      selling_price,
-      inventory(
-        quantity
-      )
-    `);
+  async getProducts(search?: string) {
+    const { profile } = useAuthStore.getState();
+    if (!profile?.tenant_id) throw new Error("Tenant not found");
 
-  if (search) {
-    query = query.ilike(
-      "name",
-      `%${search}%`
-    );
-  }
+    let query = supabase
+      .from("products")
+      .select(`
+        id,
+        name,
+        selling_price,
+        sku,
+        category_id,
+        mrp,
+        is_active,
+        barcode,
+        brand,
+        description,
+        volume_ml,
+        alcohol_percentage,
+        liquor_type,
+        manufacturer,
+        purchase_price,
+        min_stock,
+        inventory(
+          quantity
+        )
+      `)
+      .eq("tenant_id", profile.tenant_id)
+      .is("deleted_at", null); // Filter out soft-deleted products
 
-  const { data, error } =
-    await query;
+    // If search is provided and it's a string, use it
+    if (search && typeof search === "string") {
+      query = query.ilike("name", `%${search}%`);
+    }
 
-  if (error) throw error;
+    const { data, error } = await query;
 
-  return data;
-},
+    if (error) throw error;
+
+    return data;
+  },
 
   async getProductById(id: string): Promise<Product> {
+    const { profile } = useAuthStore.getState();
+    if (!profile?.tenant_id) throw new Error("Tenant not found");
+
     const { data, error } = await supabase
       .from("products")
       .select("*")
       .eq("id", id)
+      .eq("tenant_id", profile.tenant_id)
+      .is("deleted_at", null)
       .single();
 
     if (error) throw error;
@@ -42,9 +63,15 @@ async getProducts(search?: string) {
   },
 
   async createProduct(payload: ProductPayload) {
+    const { profile } = useAuthStore.getState();
+    if (!profile?.tenant_id) throw new Error("Tenant not found");
+
     const { data, error } = await supabase
       .from("products")
-      .insert(payload)
+      .insert({
+        ...payload,
+        tenant_id: profile.tenant_id,
+      })
       .select()
       .single();
 
@@ -54,10 +81,18 @@ async getProducts(search?: string) {
   },
 
   async updateProduct(id: string, payload: ProductPayload) {
+    const { profile } = useAuthStore.getState();
+    if (!profile?.tenant_id) throw new Error("Tenant not found");
+
     const { data, error } = await supabase
       .from("products")
-      .update(payload)
+      .update({
+        ...payload,
+        tenant_id: profile.tenant_id,
+      })
       .eq("id", id)
+      .eq("tenant_id", profile.tenant_id)
+      .is("deleted_at", null)
       .select()
       .single();
 
@@ -67,6 +102,7 @@ async getProducts(search?: string) {
   },
 
   async deleteProduct(id: string) {
+    const { profile } = useAuthStore.getState();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -75,10 +111,10 @@ async getProducts(search?: string) {
       .from("products")
       .update({
         deleted_at: new Date().toISOString(),
-
         deleted_by: user?.id,
       })
-      .eq("id", id);
+      .eq("id", id)
+      .eq("tenant_id", profile?.tenant_id);
 
     if (error) throw error;
   },

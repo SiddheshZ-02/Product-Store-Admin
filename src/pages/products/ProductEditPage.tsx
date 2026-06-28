@@ -2,8 +2,10 @@ import {
   useParams,
   useNavigate,
 } from "react-router-dom";
+import { toast } from "sonner";
 
 import ProductForm from "@/components/forms/ProductForm";
+import BackButton from "@/components/common/BackButton";
 
 import {
   useProduct,
@@ -31,17 +33,22 @@ export default function ProductEditPage() {
   const handleSubmit = async (
     values: ProductFormData
   ) => {
-    await updateMutation.mutateAsync({
-      id,
-      payload: values,
-    });
+    try {
+      await updateMutation.mutateAsync({
+        id,
+        payload: values,
+      });
 
-    navigate("/products");
+      navigate("/products");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update product");
+      console.error(error);
+    }
   };
 
   if (isLoading) {
     return (
-      <div>
+      <div className="flex items-center justify-center h-screen">
         Loading Product...
       </div>
     );
@@ -49,7 +56,7 @@ export default function ProductEditPage() {
 
   if (!data) {
     return (
-      <div>
+      <div className="flex items-center justify-center h-screen">
         Product not found
       </div>
     );
@@ -57,9 +64,12 @@ export default function ProductEditPage() {
 
   return (
     <div className="max-w-5xl">
-      <h1 className="text-3xl font-bold mb-6">
-        Edit Product
-      </h1>
+      <div className="flex items-center gap-2 mb-6">
+        <BackButton to="/products" />
+        <h1 className="text-3xl font-bold">
+          Edit Product
+        </h1>
+      </div>
 
       <ProductForm
         defaultValues={{

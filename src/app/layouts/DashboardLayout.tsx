@@ -1,35 +1,24 @@
-import { Outlet, Route } from "react-router-dom";
-
-import Sidebar from "@/components/layout/Sidebar";
+import { Outlet } from "react-router-dom";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import AppSidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
-import RoleProtectedRoute from "@/components/common/RoleProtectedRoute";
-import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
 
 export default function DashboardLayout() {
   return (
-    <div className="h-screen flex overflow-hidden">
-      <Sidebar />
-      <Route
-  path="/admin"
-  element={
-    <RoleProtectedRoute
-      roles={[
-        "SUPER_ADMIN",
-      ]}
-    >
-      <AdminDashboardPage />
-    </RoleProtectedRoute>
-  }
-/>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-background">
+        <AppSidebar />
 
-      <div className="flex-1 flex flex-col">
-        <Header />
+        <div className="flex-1 flex flex-col min-w-0 w-full">
+          <Header />
 
-        <main className="flex-1 overflow-auto p-6">
-          
-          <Outlet />
-        </main>
+          <main className="flex-1 w-full">
+            <div className="w-full h-full p-6">
+              <Outlet />
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }

@@ -2,8 +2,10 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import { toast } from "sonner";
 
 import CustomerForm from "@/components/forms/CustomerForm";
+import BackButton from "@/components/common/BackButton";
 
 import {
   useCustomer,
@@ -30,33 +32,41 @@ export default function CustomerEditPage() {
   const handleSubmit = async (
     values: CustomerFormData
   ) => {
-    await mutation.mutateAsync({
-      id,
-      payload: values,
-    });
+    try {
+      await mutation.mutateAsync({
+        id,
+        payload: values,
+      });
 
-    navigate("/customers");
+      navigate("/customers");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update customer");
+      console.error(error);
+    }
   };
 
   if (isLoading)
     return (
-      <div>
+      <div className="flex items-center justify-center h-screen">
         Loading...
       </div>
     );
 
   if (!data)
     return (
-      <div>
+      <div className="flex items-center justify-center h-screen">
         Customer not found
       </div>
     );
 
   return (
     <div className="max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6">
-        Edit Customer
-      </h1>
+      <div className="flex items-center gap-2 mb-6">
+        <BackButton to="/customers" />
+        <h1 className="text-3xl font-bold">
+          Edit Customer
+        </h1>
+      </div>
 
       <CustomerForm
         defaultValues={{

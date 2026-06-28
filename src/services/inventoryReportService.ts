@@ -10,7 +10,7 @@ export const inventoryReportService = {
           products(
             id,
             name,
-            cost_price,
+            purchase_price,
             selling_price
           )
         `);

@@ -1,9 +1,28 @@
 import { useMemo } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import TableSkeleton from "@/components/common/TableSkeleton";
 
 import { useInventoryReport }
   from "@/hooks/useInventory";
 import ExportExcelButton from "@/components/common/ExportExcelButton";
 import ExportPdfButton from "@/components/common/ExportPdfButton";
+
+function InventoryReportSkeleton() {
+  return (
+    <div className="space-y-6">
+      <Skeleton className="h-8 w-48" />
+      <div className="grid grid-cols-3 gap-4">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="border rounded-lg p-4">
+            <Skeleton className="h-4 w-24 mb-2" />
+            <Skeleton className="h-8 w-32" />
+          </div>
+        ))}
+      </div>
+      <TableSkeleton columns={7} />
+    </div>
+  );
+}
 
 export default function InventoryReportPage() {
   const {
@@ -85,7 +104,7 @@ const pdfRows =
 
 
   if (isLoading)
-    return <div>Loading...</div>;
+    return <InventoryReportSkeleton />;
 
   return (
     <div className="space-y-6">
@@ -94,22 +113,24 @@ const pdfRows =
       </h1>
 
       {/* Summary */}
-      <ExportExcelButton
-  data={exportData}
-  fileName="inventory-report"
-/>
-<ExportPdfButton
-  title="Inventory Report"
-  fileName="inventory-report"
-  columns={[
-    "Product",
-    "Category",
-    "Stock",
-    "Purchase Price",
-    "Selling Price",
-  ]}
-  rows={pdfRows}
-/>
+      <div className="flex gap-2">
+        <ExportExcelButton
+          data={exportData}
+          fileName="inventory-report"
+        />
+        <ExportPdfButton
+          title="Inventory Report"
+          fileName="inventory-report"
+          columns={[
+            "Product",
+            "Category",
+            "Stock",
+            "Purchase Price",
+            "Selling Price",
+          ]}
+          rows={pdfRows}
+        />
+      </div>
 
       <div className="grid grid-cols-3 gap-4">
         <div className="border rounded-lg p-4">
@@ -150,92 +171,95 @@ const pdfRows =
 
       {/* Table */}
 
-      <table className="w-full border">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Category</th>
-            <th>Stock</th>
-            <th>Cost</th>
-            <th>Sell</th>
-            <th>Value</th>
-            <th>Status</th>
-          </tr>
-        </thead>
+      <div className="border rounded-lg overflow-hidden">
+        <table className="w-full">
+          <thead className="border-b">
+            <tr>
+              <th className="p-3 text-left">Product</th>
+              <th className="p-3 text-left">Category</th>
+              <th className="p-3 text-left">Stock</th>
+              <th className="p-3 text-left">Cost</th>
+              <th className="p-3 text-left">Sell</th>
+              <th className="p-3 text-left">Value</th>
+              <th className="p-3 text-left">Status</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {data.map(
-            (item: any) => {
-              const qty =
-                Number(
-                  item.quantity
-                );
+          <tbody>
+            {data.map(
+              (item: any) => {
+                const qty =
+                  Number(
+                    item.quantity
+                  );
 
-              const cost =
-                Number(
-                  item.products
-                    ?.purchase_price
-                );
-
-              const value =
-                qty * cost;
-
-              const lowStock =
-                qty <=
-                item.products
-                  ?.min_stock;
-
-              return (
-                <tr
-                  key={
+                const cost =
+                  Number(
                     item.products
-                      ?.id
-                  }
-                >
-                  <td>
-                    {
+                      ?.purchase_price
+                  );
+
+                const value =
+                  qty * cost;
+
+                const lowStock =
+                  qty <=
+                  item.products
+                    ?.min_stock;
+
+                return (
+                  <tr
+                    key={
                       item.products
-                        ?.name
+                        ?.id
                     }
-                  </td>
+                    className="border-b"
+                  >
+                    <td className="p-3">
+                      {
+                        item.products
+                          ?.name
+                      }
+                    </td>
 
-                  <td>
-                    {
-                      item.products
-                        ?.categories
-                        ?.name
-                    }
-                  </td>
+                    <td className="p-3">
+                      {
+                        item.products
+                          ?.categories
+                          ?.name
+                      }
+                    </td>
 
-                  <td>{qty}</td>
+                    <td className="p-3">{qty}</td>
 
-                  <td>
-                    ₹{cost}
-                  </td>
+                    <td className="p-3">
+                      ₹{cost}
+                    </td>
 
-                  <td>
-                    ₹
-                    {
-                      item.products
-                        ?.selling_price
-                    }
-                  </td>
+                    <td className="p-3">
+                      ₹
+                      {
+                        item.products
+                          ?.selling_price
+                      }
+                    </td>
 
-                  <td>
-                    ₹{value}
-                  </td>
+                    <td className="p-3">
+                      ₹{value}
+                    </td>
 
-                  <td>
-                    {lowStock
-                      ? "⚠️ Low"
-                      : "✅ OK"}
-                  </td>
-                </tr>
-              );
-            }
-          )}
-        </tbody>
-      </table>
+                    <td className="p-3">
+                      {lowStock
+                        ? "⚠️ Low"
+                        : "✅ OK"}
+                    </td>
+                  </tr>
+                );
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

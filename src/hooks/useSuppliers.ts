@@ -88,6 +88,10 @@ export const useCreateSupplier =
           "Supplier created"
         );
       },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to create supplier");
+        console.error(error);
+      }
     });
   };
 
@@ -117,6 +121,10 @@ export const useUpdateSupplier =
           "Supplier updated"
         );
       },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to update supplier");
+        console.error(error);
+      }
     });
   };
 
@@ -140,5 +148,9 @@ export const useDeleteSupplier =
           "Supplier deleted"
         );
       },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to delete supplier");
+        console.error(error);
+      }
     });
   };

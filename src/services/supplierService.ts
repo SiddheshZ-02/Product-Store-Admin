@@ -1,11 +1,17 @@
 import { supabase } from "@/lib/supabase";
+import type { SupplierPayload } from "@/types/supplier.types";
+import { useAuthStore } from "@/store/authStore";
 
 export const supplierService = {
   async getSuppliers() {
+    const { profile } = useAuthStore.getState();
+    if (!profile?.tenant_id) throw new Error("Tenant not found");
+
     const { data, error } =
       await supabase
         .from("suppliers")
         .select("*")
+        .eq("tenant_id", profile.tenant_id)
         .is("deleted_at", null)
         .order("created_at", {
           ascending: false,
@@ -19,11 +25,16 @@ export const supplierService = {
   async getSupplierById(
     id: string
   ) {
+    const { profile } = useAuthStore.getState();
+    if (!profile?.tenant_id) throw new Error("Tenant not found");
+
     const { data, error } =
       await supabase
         .from("suppliers")
         .select("*")
         .eq("id", id)
+        .eq("tenant_id", profile.tenant_id)
+        .is("deleted_at", null)
         .single();
 
     if (error) throw error;
@@ -32,12 +43,18 @@ export const supplierService = {
   },
 
   async createSupplier(
-    payload: any
+    payload: SupplierPayload
   ) {
+    const { profile } = useAuthStore.getState();
+    if (!profile?.tenant_id) throw new Error("Tenant not found");
+
     const { data, error } =
       await supabase
         .from("suppliers")
-        .insert(payload)
+        .insert({
+          ...payload,
+          tenant_id: profile.tenant_id,
+        })
         .select()
         .single();
 
@@ -48,13 +65,21 @@ export const supplierService = {
 
   async updateSupplier(
     id: string,
-    payload: any
+    payload: SupplierPayload
   ) {
+    const { profile } = useAuthStore.getState();
+    if (!profile?.tenant_id) throw new Error("Tenant not found");
+
     const { data, error } =
       await supabase
         .from("suppliers")
-        .update(payload)
+        .update({
+          ...payload,
+          tenant_id: profile.tenant_id,
+        })
         .eq("id", id)
+        .eq("tenant_id", profile.tenant_id)
+        .is("deleted_at", null)
         .select()
         .single();
 
@@ -66,6 +91,7 @@ export const supplierService = {
   async deleteSupplier(
     id: string
   ) {
+    const { profile } = useAuthStore.getState();
     const {
       data: { user },
     } =
@@ -81,7 +107,8 @@ export const supplierService = {
           deleted_by:
             user?.id,
         })
-        .eq("id", id);
+        .eq("id", id)
+        .eq("tenant_id", profile?.tenant_id);
 
     if (error) throw error;
   },

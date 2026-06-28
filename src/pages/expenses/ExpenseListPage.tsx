@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import TableSkeleton from "@/components/common/TableSkeleton";
 
 import {
   useDeleteExpense,
@@ -41,8 +43,13 @@ export default function ExpenseListPage() {
 
   if (isLoading) {
     return (
-      <div>
-        Loading Expenses...
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-8 w-40" />
+          <Skeleton className="h-10 w-40" />
+        </div>
+        <Skeleton className="h-10 w-full" />
+        <TableSkeleton columns={6} />
       </div>
     );
   }

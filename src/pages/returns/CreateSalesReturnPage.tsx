@@ -14,17 +14,14 @@ import {
 export default function CreateSalesReturnPage() {
   const { data: sales = [] } = useSalesHistory();
 
+  const [saleId, setSaleId] = useState("");
+  const [productId, setProductId] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [reason, setReason] = useState("");
+
   const { data: saleItems = [] } = useSaleItemsForReturn(saleId);
 
   const createReturn = useCreateSalesReturn();
-
-  const [saleId, setSaleId] = useState("");
-
-  const [productId, setProductId] = useState("");
-
-  const [quantity, setQuantity] = useState("");
-
-  const [reason, setReason] = useState("");
 
   return (
     <div className="space-y-6 max-w-xl">

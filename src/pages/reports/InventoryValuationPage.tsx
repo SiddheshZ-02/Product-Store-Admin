@@ -28,7 +28,7 @@ export default function InventoryValuationPage() {
 
           const cost =
             Number(
-              row.products?.cost_price
+              row.products?.purchase_price
             ) || 0;
 
           const selling =
@@ -158,7 +158,7 @@ export default function InventoryValuationPage() {
 
                 const cost =
                   Number(
-                    row.products?.cost_price
+                    row.products?.purchase_price
                   );
 
                 const selling =

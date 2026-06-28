@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 import SupplierForm from "@/components/forms/SupplierForm";
+import BackButton from "@/components/common/BackButton";
 
 import {
   useCreateSupplier,
@@ -15,9 +17,12 @@ export default function SupplierCreatePage() {
 
   return (
     <div className="max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6">
-        Create Supplier
-      </h1>
+      <div className="flex items-center gap-2 mb-6">
+        <BackButton to="/suppliers" />
+        <h1 className="text-3xl font-bold">
+          Create Supplier
+        </h1>
+      </div>
 
       <SupplierForm
         loading={
@@ -26,13 +31,18 @@ export default function SupplierCreatePage() {
         onSubmit={async (
           values
         ) => {
-          await mutation.mutateAsync(
-            values
-          );
+          try {
+            await mutation.mutateAsync(
+              values
+            );
 
-          navigate(
-            "/suppliers"
-          );
+            navigate(
+              "/suppliers"
+            );
+          } catch (error: any) {
+            toast.error(error.message || "Failed to create supplier");
+            console.error(error);
+          }
         }}
       />
     </div>

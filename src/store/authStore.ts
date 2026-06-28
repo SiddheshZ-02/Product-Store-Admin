@@ -1,10 +1,9 @@
 import { create } from "zustand";
-// import { User } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 
 import { authService } from "@/services/authService";
 import type { User } from "@supabase/supabase-js";
 import type { Profile } from "@/types/auth.types";
-// import { Profile } from "@/types/auth.types";
 
 interface AuthState {
   user: User | null;
@@ -49,6 +48,25 @@ export const useAuthStore =
           await authService.getProfile(
             user.id
           );
+
+        // Check tenant status
+        if (profile.role !== "SUPER_ADMIN" && profile.tenant_id) {
+          const { data: tenant, error: tenantError } = await supabase
+            .from("tenants")
+            .select("status")
+            .eq("id", profile.tenant_id)
+            .single();
+
+          if (tenantError || tenant.status === "suspended") {
+            await authService.logout();
+            set({
+              user: null,
+              profile: null,
+              loading: false,
+            });
+            return;
+          }
+        }
 
         set({
           user,

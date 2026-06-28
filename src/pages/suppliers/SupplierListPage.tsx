@@ -9,6 +9,8 @@ import {
 } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import TableSkeleton from "@/components/common/TableSkeleton";
 
 import {
   useSuppliers,
@@ -22,7 +24,7 @@ export default function SupplierListPage() {
   const [search, setSearch] =
     useState("");
 
-  const { data = [] } =
+  const { data = [], isLoading } =
     useSuppliers();
 
   const deleteMutation =
@@ -39,6 +41,19 @@ export default function SupplierListPage() {
             )
       );
     }, [data, search]);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-5">
+        <div className="flex justify-between items-center">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-10 w-40" />
+        </div>
+        <Skeleton className="h-10 w-80" />
+        <TableSkeleton columns={4} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-5">

@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 import {
   Select,
@@ -15,11 +16,6 @@ import {
 
 import { useCategories } from "@/hooks/useCategories";
 import { productSchema, type ProductFormData } from "@/types/productSchema";
-
-// import {
-//   productSchema,
-//   ProductFormData,
-// } from "@/types/productSchema";
 
 interface Props {
   defaultValues?: Partial<ProductFormData>;
@@ -55,27 +51,39 @@ export default function ProductForm({
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-6"
     >
-      <div className="grid grid-cols-2 gap-4">
-        <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="name">Product Name *</Label>
           <Input
+            id="name"
             placeholder="Product Name"
             {...register("name")}
           />
 
-          <p className="text-red-500 text-sm">
-            {errors.name?.message}
-          </p>
+          {errors.name && (
+            <p className="text-red-500 text-sm">
+              {errors.name.message}
+            </p>
+          )}
         </div>
 
-        <div>
+        <div className="space-y-2">
+          <Label htmlFor="sku">SKU *</Label>
           <Input
+            id="sku"
             placeholder="SKU"
             {...register("sku")}
           />
+          {errors.sku && (
+            <p className="text-red-500 text-sm">
+              {errors.sku.message}
+            </p>
+          )}
         </div>
       </div>
 
-      <div>
+      <div className="space-y-2">
+        <Label htmlFor="category_id">Category *</Label>
         <Select
           value={watch("category_id")}
           onValueChange={(value) =>
@@ -85,7 +93,7 @@ export default function ProductForm({
             )
           }
         >
-          <SelectTrigger>
+          <SelectTrigger id="category_id">
             <SelectValue placeholder="Select Category" />
           </SelectTrigger>
 
@@ -102,92 +110,172 @@ export default function ProductForm({
             )}
           </SelectContent>
         </Select>
+        {errors.category_id && (
+          <p className="text-red-500 text-sm">
+            {errors.category_id.message}
+          </p>
+        )}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Input
-          placeholder="Brand"
-          {...register("brand")}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="brand">Brand</Label>
+          <Input
+            id="brand"
+            placeholder="Brand"
+            {...register("brand")}
+          />
+        </div>
 
-        <Input
-          placeholder="Barcode"
-          {...register("barcode")}
-        />
+        <div className="space-y-2">
+          <Label htmlFor="barcode">Barcode</Label>
+          <Input
+            id="barcode"
+            placeholder="Barcode"
+            {...register("barcode")}
+          />
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Input
-          type="number"
-          placeholder="Volume ML"
-          {...register("volume_ml", { valueAsNumber: true })}
-        />
-
-        <Input
-          type="number"
-          placeholder="Alcohol %"
-          {...register(
-            "alcohol_percentage", { valueAsNumber: true }
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="volume_ml">Volume ML *</Label>
+          <Input
+            id="volume_ml"
+            type="number"
+            placeholder="Volume ML"
+            {...register("volume_ml", { valueAsNumber: true })}
+          />
+          {errors.volume_ml && (
+            <p className="text-red-500 text-sm">
+              {errors.volume_ml.message}
+            </p>
           )}
-        />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="alcohol_percentage">Alcohol % *</Label>
+          <Input
+            id="alcohol_percentage"
+            type="number"
+            placeholder="Alcohol %"
+            {...register(
+              "alcohol_percentage", { valueAsNumber: true }
+            )}
+          />
+          {errors.alcohol_percentage && (
+            <p className="text-red-500 text-sm">
+              {errors.alcohol_percentage.message}
+            </p>
+          )}
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Input
-          placeholder="Liquor Type"
-          {...register(
-            "liquor_type"
-          )}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="liquor_type">Liquor Type</Label>
+          <Input
+            id="liquor_type"
+            placeholder="Liquor Type"
+            {...register(
+              "liquor_type"
+            )}
+          />
+        </div>
 
-        <Input
-          placeholder="Manufacturer"
-          {...register(
-            "manufacturer"
-          )}
-        />
+        <div className="space-y-2">
+          <Label htmlFor="manufacturer">Manufacturer</Label>
+          <Input
+            id="manufacturer"
+            placeholder="Manufacturer"
+            {...register(
+              "manufacturer"
+            )}
+          />
+        </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <Input
-          type="number"
-          placeholder="Purchase Price"
-          {...register(
-            "purchase_price", { valueAsNumber: true }
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="purchase_price">Purchase Price *</Label>
+          <Input
+            id="purchase_price"
+            type="number"
+            step="0.01"
+            placeholder="Purchase Price"
+            {...register(
+              "purchase_price", { valueAsNumber: true }
+            )}
+          />
+          {errors.purchase_price && (
+            <p className="text-red-500 text-sm">
+              {errors.purchase_price.message}
+            </p>
           )}
-        />
+        </div>
 
-        <Input
-          type="number"
-          placeholder="Selling Price"
-          {...register(
-            "selling_price", { valueAsNumber: true }
+        <div className="space-y-2">
+          <Label htmlFor="selling_price">Selling Price *</Label>
+          <Input
+            id="selling_price"
+            type="number"
+            step="0.01"
+            placeholder="Selling Price"
+            {...register(
+              "selling_price", { valueAsNumber: true }
+            )}
+          />
+          {errors.selling_price && (
+            <p className="text-red-500 text-sm">
+              {errors.selling_price.message}
+            </p>
           )}
-        />
+        </div>
 
-        <Input
-          type="number"
-          placeholder="MRP"
-          {...register("mrp", { valueAsNumber: true })}
-        />
+        <div className="space-y-2">
+          <Label htmlFor="mrp">MRP *</Label>
+          <Input
+            id="mrp"
+            type="number"
+            step="0.01"
+            placeholder="MRP"
+            {...register("mrp", { valueAsNumber: true })}
+          />
+          {errors.mrp && (
+            <p className="text-red-500 text-sm">
+              {errors.mrp.message}
+            </p>
+          )}
+        </div>
       </div>
 
-      <div>
+      <div className="space-y-2">
+        <Label htmlFor="min_stock">Minimum Stock *</Label>
         <Input
+          id="min_stock"
           type="number"
           placeholder="Minimum Stock"
           {...register(
             "min_stock", { valueAsNumber: true }
           )}
         />
+        {errors.min_stock && (
+          <p className="text-red-500 text-sm">
+            {errors.min_stock.message}
+          </p>
+        )}
       </div>
 
-      <Textarea
-        placeholder="Description"
-        {...register(
-          "description"
-        )}
-      />
+      <div className="space-y-2">
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          placeholder="Description"
+          {...register(
+            "description"
+          )}
+        />
+      </div>
 
       <Button
         type="submit"

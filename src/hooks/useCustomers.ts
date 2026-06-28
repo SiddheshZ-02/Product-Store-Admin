@@ -55,6 +55,10 @@ export const useCreateCustomer =
           "Customer created"
         );
       },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to create customer");
+        console.error(error);
+      }
     });
   };
 
@@ -86,6 +90,10 @@ export const useUpdateCustomer =
           "Customer updated"
         );
       },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to update customer");
+        console.error(error);
+      }
     });
   };
 
@@ -111,6 +119,10 @@ export const useDeleteCustomer =
           "Customer deleted"
         );
       },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to delete customer");
+        console.error(error);
+      }
     });
   };
 

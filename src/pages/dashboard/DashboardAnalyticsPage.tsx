@@ -1,121 +1,63 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { format, subDays } from "date-fns";
 
-import { useDashboardAnalytics }
-from "@/hooks/useDashboardAnalytics";
-
-import RevenueChart
-from "@/components/charts/RevenueChart";
-
-import TopProductsChart
-from "@/components/charts/TopProductsChart";
+import { useDashboardCharts, useDashboardTopProducts } from "@/hooks/useDashboard";
+import RevenueChart from "@/components/charts/RevenueChart";
+import TopProductsChart from "@/components/charts/TopProductsChart";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default function DashboardAnalyticsPage() {
+  const [dateRange, setDateRange] = useState({
+    from: format(subDays(new Date(), 30), "yyyy-MM-dd"),
+    to: format(new Date(), "yyyy-MM-dd"),
+  });
 
-  const {
-    data,
-    isLoading,
-  } = useDashboardAnalytics();
+  const { data: chartData, isLoading: chartsLoading } = useDashboardCharts(dateRange.from, dateRange.to);
+  const { data: topProductsData, isLoading: topProductsLoading } = useDashboardTopProducts();
 
-  const chartData =
-    useMemo(() => {
+  const revenueData = useMemo(() => {
+    if (!chartData) return [];
+    return (chartData as any[]).map((item: any) => ({
+      date: item.date,
+      sales: Number(item.amount || item.sales),
+    }));
+  }, [chartData]);
 
-      if (!data)
-        return [];
+  const topProducts = useMemo(() => {
+    if (!topProductsData) return [];
+    return (topProductsData as any[]).map((item: any) => ({
+      name: item.name,
+      qty: Number(item.qty || item.quantity),
+    }));
+  }, [topProductsData]);
 
-      return data.sales.map(
-        (sale: any) => ({
-          date:
-            sale.sale_date,
-
-          sales:
-            Number(
-              sale.total_amount
-            ),
-        })
-      );
-
-    }, [data]);
-
-  const topProducts =
-    useMemo(() => {
-
-      if (!data)
-        return [];
-
-      const map =
-        new Map();
-
-      data.saleItems.forEach(
-        (item: any) => {
-
-          const name =
-            item.products?.name;
-
-          const qty =
-            Number(
-              item.quantity
-            );
-
-          map.set(
-            name,
-            (map.get(name) || 0)
-              + qty
-          );
-        }
-      );
-
-      return Array
-        .from(
-          map.entries()
-        )
-        .map(
-          ([name, qty]) => ({
-            name,
-            qty,
-          })
-        )
-        .sort(
-          (a, b) =>
-            b.qty - a.qty
-        )
-        .slice(0, 5);
-
-    }, [data]);
-
-  if (isLoading)
-    return <div>Loading...</div>;
+  if (chartsLoading || topProductsLoading) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
 
   return (
     <div className="space-y-6">
+      <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
 
-      <h1 className="text-3xl font-bold">
-        Analytics Dashboard
-      </h1>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Revenue Trend</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <RevenueChart data={revenueData} />
+          </CardContent>
+        </Card>
 
-      <div className="grid grid-cols-2 gap-6">
-
-        <div className="border rounded-lg p-4">
-          <h2 className="font-bold mb-4">
-            Revenue Trend
-          </h2>
-
-          <RevenueChart
-            data={chartData}
-          />
-        </div>
-
-        <div className="border rounded-lg p-4">
-          <h2 className="font-bold mb-4">
-            Top Products
-          </h2>
-
-          <TopProductsChart
-            data={topProducts}
-          />
-        </div>
-
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Products</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TopProductsChart data={topProducts} />
+          </CardContent>
+        </Card>
       </div>
-
     </div>
   );
 }

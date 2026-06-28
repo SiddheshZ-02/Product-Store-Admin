@@ -11,8 +11,7 @@ import { productService } from "@/services/productService";
 export const useProducts = () => {
   return useQuery({
     queryKey: ["products"],
-    queryFn:
-      productService.getProducts,
+    queryFn: () => productService.getProducts(),
   });
 };
 
@@ -38,6 +37,10 @@ export const useCreateProduct =
           "Product created"
         );
       },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to create product");
+        console.error(error);
+      }
     });
   };
 
@@ -63,6 +66,10 @@ export const useDeleteProduct =
           "Product deleted"
         );
       },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to delete product");
+        console.error(error);
+      }
     });
   };
   export const useUpdateProduct =
@@ -93,6 +100,10 @@ export const useDeleteProduct =
           "Product updated"
         );
       },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to update product");
+        console.error(error);
+      }
     });
   };
 

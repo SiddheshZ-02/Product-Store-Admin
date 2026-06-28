@@ -7,13 +7,19 @@ import {
 import { toast } from "sonner";
 
 import { salesService } from "@/services/salesService";
+import { getDateRange } from "@/utils/dateRange";
 
 
-export const useSales = (from = "", to = "") =>
-  useQuery({
-    queryKey: ["sales", from, to],
-    queryFn: () => salesService.getSales(from, to),
+export const useSales = (from?: string, to?: string) => {
+  const defaultRange = getDateRange("30days");
+  const fromDate = from || defaultRange.from;
+  const toDate = to || defaultRange.to;
+
+  return useQuery({
+    queryKey: ["sales", fromDate, toDate],
+    queryFn: () => salesService.getSales(fromDate, toDate),
   });
+};
 
 export const useCreateSale =
   () => {
@@ -44,6 +50,10 @@ export const useCreateSale =
         toast.success(
           "Sale Created"
         );
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to create sale");
+        console.error(error);
       },
     });    
   };

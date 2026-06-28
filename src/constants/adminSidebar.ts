@@ -3,8 +3,8 @@ import {
   Building2,
   CreditCard,
   Users,
-  BarChart3,
   Settings,
+  History,
 } from "lucide-react";
 
 export const adminSidebar = [
@@ -29,9 +29,9 @@ export const adminSidebar = [
     path: "/admin/subscriptions",
   },
   {
-    label: "Analytics",
-    icon: BarChart3,
-    path: "/admin/analytics",
+    label: "Audit Logs",
+    icon: History,
+    path: "/admin/audit-logs",
   },
   {
     label: "Settings",

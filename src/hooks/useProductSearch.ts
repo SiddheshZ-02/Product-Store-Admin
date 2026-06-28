@@ -24,7 +24,10 @@ export const useProductSearch =
         .select(`
           id,
           name,
-          selling_price
+          selling_price,
+          inventory(
+            quantity
+          )
         `)
         .ilike(
           "name",

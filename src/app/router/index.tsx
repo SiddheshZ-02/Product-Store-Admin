@@ -1,57 +1,68 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
 import AuthLayout from "@/app/layouts/AuthLayout";
 import DashboardLayout from "@/app/layouts/DashboardLayout";
 
-import LoginPage from "@/pages/auth/LoginPage";
-import DashboardPage from "@/pages/dashboard/DashboardPage";
-
 import ProtectedRoute from "@/components/common/ProtectedRoute";
-import ProductListPage from "@/pages/products/ProductListPage";
-import ProductCreatePage from "@/pages/products/ProductCreatePage";
-import ProductEditPage from "@/pages/products/ProductEditPage";
-import CustomerListPage from "@/pages/customers/CustomerListPage";
-import CustomerCreatePage from "@/pages/customers/CustomerCreatePage";
-import CustomerEditPage from "@/pages/customers/CustomerEditPage";
-import SupplierListPage from "@/pages/suppliers/SupplierListPage";
-import SupplierCreatePage from "@/pages/suppliers/SupplierCreatePage";
-import SupplierEditPage from "@/pages/suppliers/SupplierEditPage";
-import PurchaseCreatePage from "@/pages/purchases/PurchaseCreatePage";
-import SalesCreatePage from "@/pages/sales/SalesCreatePage";
-import SalesListPage from "@/pages/sales/SalesListPage";
-import CustomerDueListPage from "@/pages/payments/CustomerDueListPage";
-import ReceivePaymentPage from "@/pages/payments/ReceivePaymentPage";
-import SupplierDueListPage from "@/pages/payments/SupplierDueListPage";
-import PaySupplierPage from "@/pages/payments/PaySupplierPage";
-import InventoryReportPage from "@/pages/reports/InventoryReportPage";
-import SalesReportPage from "@/pages/reports/SalesReportPage";
-import CustomerLedgerPage from "@/pages/reports/CustomerLedgerPage";
 import { ROUTES } from "@/constants/routes";
-import SupplierLedgerPage from "@/pages/reports/SupplierLedgerPage";
-import ProfitLossPage from "@/pages/reports/ProfitLossPage";
-import DashboardAnalyticsPage from "@/pages/dashboard/DashboardAnalyticsPage";
-import PurchaseReportPage from "@/pages/reports/PurchaseReportPage";
-import DueReminderPage from "@/pages/customers/DueReminderPage";
-import SalesHistoryPage from "@/pages/sales/SalesHistoryPage";
-import SaleInvoicePage from "@/pages/sales/SaleInvoicePage";
-import SalesReturnPage from "@/pages/sales/SalesReturnPage";
-import ExpenseCategoriesPage from "@/pages/expenses/ExpenseCategoriesPage";
-import CreateExpensePage from "@/pages/expenses/CreateExpensePage";
-import ExpenseListPage from "@/pages/expenses/ExpenseListPage";
-import EditExpensePage from "@/pages/expenses/EditExpensePage";
-import InventoryValuationPage from "@/pages/reports/InventoryValuationPage";
-import CustomerPaymentHistoryPage from "@/pages/payments/CustomerPaymentHistoryPage";
-import PurchaseReturnHistoryPage from "@/pages/purchase-returns/PurchaseReturnHistoryPage";
-import CreatePurchaseReturnPage from "@/pages/purchase-returns/CreatePurchaseReturnPage";
-import CashbookPage from "@/pages/reports/CashbookPage";
 import RoleRoute from "@/components/common/RoleRoute";
-import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
 import { ROLES } from "@/constants/roles";
-import TenantListPage from "@/pages/admin/TenantListPage";
+import PageSkeleton from "@/components/common/PageSkeleton";
+
+const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
+const DashboardPage = lazy(() => import("@/pages/dashboard/DashboardPage"));
+const ProductListPage = lazy(() => import("@/pages/products/ProductListPage"));
+const ProductCreatePage = lazy(() => import("@/pages/products/ProductCreatePage"));
+const ProductEditPage = lazy(() => import("@/pages/products/ProductEditPage"));
+const CustomerListPage = lazy(() => import("@/pages/customers/CustomerListPage"));
+const CustomerCreatePage = lazy(() => import("@/pages/customers/CustomerCreatePage"));
+const CustomerEditPage = lazy(() => import("@/pages/customers/CustomerEditPage"));
+const SupplierListPage = lazy(() => import("@/pages/suppliers/SupplierListPage"));
+const SupplierCreatePage = lazy(() => import("@/pages/suppliers/SupplierCreatePage"));
+const SupplierEditPage = lazy(() => import("@/pages/suppliers/SupplierEditPage"));
+const PurchaseCreatePage = lazy(() => import("@/pages/purchases/PurchaseCreatePage"));
+const SalesCreatePage = lazy(() => import("@/pages/sales/SalesCreatePage"));
+const SalesListPage = lazy(() => import("@/pages/sales/SalesListPage"));
+const CustomerDueListPage = lazy(() => import("@/pages/payments/CustomerDueListPage"));
+const ReceivePaymentPage = lazy(() => import("@/pages/payments/ReceivePaymentPage"));
+const SupplierDueListPage = lazy(() => import("@/pages/payments/SupplierDueListPage"));
+const PaySupplierPage = lazy(() => import("@/pages/payments/PaySupplierPage"));
+const InventoryReportPage = lazy(() => import("@/pages/reports/InventoryReportPage"));
+const SalesReportPage = lazy(() => import("@/pages/reports/SalesReportPage"));
+const CustomerLedgerPage = lazy(() => import("@/pages/reports/CustomerLedgerPage"));
+const SupplierLedgerPage = lazy(() => import("@/pages/reports/SupplierLedgerPage"));
+const ProfitLossPage = lazy(() => import("@/pages/reports/ProfitLossPage"));
+const DashboardAnalyticsPage = lazy(() => import("@/pages/dashboard/DashboardAnalyticsPage"));
+const PurchaseReportPage = lazy(() => import("@/pages/reports/PurchaseReportPage"));
+const DueReminderPage = lazy(() => import("@/pages/customers/DueReminderPage"));
+const SalesHistoryPage = lazy(() => import("@/pages/sales/SalesHistoryPage"));
+const SaleInvoicePage = lazy(() => import("@/pages/sales/SaleInvoicePage"));
+const SalesReturnPage = lazy(() => import("@/pages/sales/SalesReturnPage"));
+const ExpenseCategoriesPage = lazy(() => import("@/pages/expenses/ExpenseCategoriesPage"));
+const CreateExpensePage = lazy(() => import("@/pages/expenses/CreateExpensePage"));
+const ExpenseListPage = lazy(() => import("@/pages/expenses/ExpenseListPage"));
+const EditExpensePage = lazy(() => import("@/pages/expenses/EditExpensePage"));
+const InventoryValuationPage = lazy(() => import("@/pages/reports/InventoryValuationPage"));
+const CustomerPaymentHistoryPage = lazy(() => import("@/pages/payments/CustomerPaymentHistoryPage"));
+const PurchaseReturnHistoryPage = lazy(() => import("@/pages/purchase-returns/PurchaseReturnHistoryPage"));
+const CreatePurchaseReturnPage = lazy(() => import("@/pages/purchase-returns/CreatePurchaseReturnPage"));
+const CashbookPage = lazy(() => import("@/pages/reports/CashbookPage"));
+const AdminDashboardPage = lazy(() => import("@/pages/admin/AdminDashboardPage"));
+const TenantListPage = lazy(() => import("@/pages/admin/TenantListPage"));
+const TenantFormPage = lazy(() => import("@/pages/admin/TenantFormPage"));
+const PlanListPage = lazy(() => import("@/pages/admin/PlanListPage"));
+const PlanFormPage = lazy(() => import("@/pages/admin/PlanFormPage"));
+const SubscriptionListPage = lazy(() => import("@/pages/admin/SubscriptionListPage"));
+const AuditLogsPage = lazy(() => import("@/pages/admin/AuditLogsPage"));
+const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
+const StockAdjustmentPage = lazy(() => import("@/pages/inventory/StockAdjustmentPage"));
+const AdjustmentHistoryPage = lazy(() => import("@/pages/inventory/AdjustmentHistoryPage"));
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
+      <Suspense fallback={<PageSkeleton />}>
       <Routes>
         <Route
           path="/"
@@ -136,10 +147,6 @@ export default function AppRouter() {
             element={<CustomerPaymentHistoryPage />}
           />
           <Route
-            path="/payments/history"
-            element={<CustomerPaymentHistoryPage />}
-          />
-          <Route
             path="/purchase-returns"
             element={<PurchaseReturnHistoryPage />}
           />
@@ -148,37 +155,93 @@ export default function AppRouter() {
             path="/purchase-returns/create"
             element={<CreatePurchaseReturnPage />}
           />
+          <Route path="/reports/cashbook" element={<CashbookPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route
-  path="/reports/cashbook"
-  element={<CashbookPage />}
-/>
+            path="/inventory/adjustment"
+            element={<StockAdjustmentPage />}
+          />
+          <Route
+            path="/inventory/adjustment/history"
+            element={<AdjustmentHistoryPage />}
+          />
 
-<Route
-  path="/admin/dashboard"
-  element={
-    <RoleRoute
-      allow={[
-        ROLES.SUPER_ADMIN,
-      ]}
-    >
-      <AdminDashboardPage />
-    </RoleRoute>
-  }
-/>
-<Route
-  path="/admin/tenants"
-  element={
-    <RoleRoute
-      allow={[
-        ROLES.SUPER_ADMIN,
-      ]}
-    >
-      <TenantListPage />
-    </RoleRoute>
-  }
-/>
+          {/* Admin Routes */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <RoleRoute allow={[ROLES.SUPER_ADMIN]}>
+                <AdminDashboardPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/tenants"
+            element={
+              <RoleRoute allow={[ROLES.SUPER_ADMIN]}>
+                <TenantListPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/tenants/create"
+            element={
+              <RoleRoute allow={[ROLES.SUPER_ADMIN]}>
+                <TenantFormPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/tenants/:id/edit"
+            element={
+              <RoleRoute allow={[ROLES.SUPER_ADMIN]}>
+                <TenantFormPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/plans"
+            element={
+              <RoleRoute allow={[ROLES.SUPER_ADMIN]}>
+                <PlanListPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/plans/create"
+            element={
+              <RoleRoute allow={[ROLES.SUPER_ADMIN]}>
+                <PlanFormPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/plans/:id/edit"
+            element={
+              <RoleRoute allow={[ROLES.SUPER_ADMIN]}>
+                <PlanFormPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/subscriptions"
+            element={
+              <RoleRoute allow={[ROLES.SUPER_ADMIN]}>
+                <SubscriptionListPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/audit-logs"
+            element={
+              <RoleRoute allow={[ROLES.SUPER_ADMIN]}>
+                <AuditLogsPage />
+              </RoleRoute>
+            }
+          />
         </Route>
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
